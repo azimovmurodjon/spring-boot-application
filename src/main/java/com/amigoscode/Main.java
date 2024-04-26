@@ -3,6 +3,7 @@ package com.amigoscode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,10 +33,11 @@ public class Main {
      * HTTP GET requests, which only takes an optional value argument, no method argument. The read in CRUD.
      */
 
-    public GreetResponce greet() {
-
+    public GreetResponce greet(
+            @RequestParam(value = "name", required = false) String name) {
+        String greetMessage = name == null || name.isBlank() ? "Hello" : "Hello " + name;
         GreetResponce responce = new GreetResponce(
-                "Hello",
+                greetMessage,
                 List.of("Java", "Python", "JavaScript"),
                 new Person("Alex", 28, 300_00)
         );
