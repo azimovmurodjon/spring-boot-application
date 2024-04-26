@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,17 +25,44 @@ import java.util.Objects;
  * and that all the methods in the marked class will return a JSON response.
  */
 public class Main {
+
+    private static List<Customer> customers;
+
+    static {
+        customers = new ArrayList<>();
+        Customer alex = new Customer(
+
+                1,
+                "Alex",
+                "alex@gmail.com",
+                21
+        );
+        customers.add(alex);
+
+        Customer jamila = new Customer(
+
+                1,
+                "Jamila",
+                "jamila@gmail.com",
+                19
+        );
+        customers.add(jamila);
+
+    }
+
     public static void main(String[] args) {
+        System.out.println(customers);
         SpringApplication.run(Main.class, args);
     }
 
-    class Customer {
+    static class Customer {
         private Integer id;
         private String name;
         private String email;
         private Integer age;
 
-        public Customer(){}
+        public Customer() {
+        }
 
         public Customer(Integer id, String name, String email, Integer age) {
             this.id = id;
