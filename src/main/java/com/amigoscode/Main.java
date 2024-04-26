@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @SpringBootApplication
 /**
@@ -27,37 +28,76 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    @GetMapping("/greet")
-    /**
-     * An abbreviated form of @RequestMapping specifically for
-     * HTTP GET requests, which only takes an optional value argument, no method argument. The read in CRUD.
-     */
+    class Customer {
+        private Integer id;
+        private String name;
+        private String email;
+        private Integer age;
 
-    public GreetResponce greet(
-            @RequestParam(value = "name", required = false) String name) {
-        String greetMessage = name == null || name.isBlank() ? "Hello" : "Hello " + name;
-        GreetResponce responce = new GreetResponce(
-                greetMessage,
-                List.of("Java", "Python", "JavaScript"),
-                new Person("Alex", 28, 300_00)
-        );
-        return responce;
-    }
+        public Customer(){}
 
-    /**
-     * @RestController The @RestController annotation is a convenience syntax for @Controller
-     * and @ResponseBody together. This indicates that the class is a controller,
-     * and that all the methods in the marked class will return a JSON response.
-     * param GreetResponce
-     */
-    record Person(String nam, int age, double savings) {
-    }
+        public Customer(Integer id, String name, String email, Integer age) {
+            this.id = id;
+            this.name = name;
+            this.email = email;
+            this.age = age;
+        }
 
-    record GreetResponce(
-            String greet,
-            List<String> favProgrammingLanguages,
-            Person person
-    ) {
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public Integer getAge() {
+            return age;
+        }
+
+        public void setAge(Integer age) {
+            this.age = age;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Customer customer = (Customer) o;
+            return Objects.equals(id, customer.id) && Objects.equals(name, customer.name) && Objects.equals(email, customer.email) && Objects.equals(age, customer.age);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name, email, age);
+        }
+
+        @Override
+        public String toString() {
+            return "Customer{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", email='" + email + '\'' +
+                    ", age=" + age +
+                    '}';
+        }
     }
 
 }
+
