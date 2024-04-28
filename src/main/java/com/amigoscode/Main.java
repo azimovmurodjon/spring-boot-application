@@ -34,16 +34,16 @@ public class Main {
         ConfigurableApplicationContext applicationContext =
                 SpringApplication.run(Main.class, args);
 
-        printBeans(applicationContext);
+//        printBeans(applicationContext);
     }
 
 
-    @Bean("foo")
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    // @RequestScope()
-    public Foo getFoo() {
-        return new Foo("bar");
-    }
+//    @Bean("foo")
+//    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+//    // @RequestScope()
+//    public Foo getFoo() {
+//        return new Foo("bar");
+//    }
 
     record Foo(String name){}
 
