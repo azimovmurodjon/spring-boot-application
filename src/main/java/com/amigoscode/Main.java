@@ -1,7 +1,11 @@
 package com.amigoscode;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -11,6 +15,7 @@ import java.util.Objects;
 
 /**
  * It's syntactic sugar for combining other annotations that we'll look at in just a moment.
+ *
  * @SpringBootApplication is @Configuration, @EnableAutoConfiguration
  * and @ComponentScan annotations combined, configured with their default attributes.
  * We add this annotation just once, to the main class of our application.
@@ -23,9 +28,33 @@ import java.util.Objects;
  */
 @SpringBootApplication
 public class Main {
-
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+
+
+        ConfigurableApplicationContext applicationContext =
+                SpringApplication.run(Main.class, args);
+
+        printBeans(applicationContext);
     }
+
+
+    @Bean("foo")
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    // @RequestScope()
+    public Foo getFoo() {
+        return new Foo("bar");
+    }
+
+    record Foo(String name){}
+
+    private static void printBeans(ConfigurableApplicationContext ctx) {
+        String[] beanDefinitionNames =
+                ctx.getBeanDefinitionNames();
+        for (String beanDefinitionName : beanDefinitionNames) {
+            System.out.println(beanDefinitionName);
+        }
+    }
+
 }
+
 
