@@ -1,14 +1,13 @@
 package com.amigoscode.customer;
 
-import com.amigoscode.Main;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public class CustomerDataAccessService implements CustomerDAO {
+@Repository("list")
+public class CustomerListDataAccessService implements CustomerDAO {
 
     private static List<Customer> customers;
 
