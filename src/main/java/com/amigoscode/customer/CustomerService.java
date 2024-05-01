@@ -22,7 +22,7 @@ public class CustomerService {
     public Customer getCustomer(Integer customerId){
         return customerDAO.selectCustomerById(customerId)
                 .orElseThrow(() -> new ResourceNotFound(
-                                "customer with id [%s} is not found".formatted(customerId)
+                                "customer with id [%s] is not found".formatted(customerId)
                 ));
     }
 }
