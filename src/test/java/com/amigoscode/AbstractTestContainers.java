@@ -3,6 +3,7 @@ package com.amigoscode;
 import com.github.javafaker.Faker;
 import org.flywaydb.core.Flyway;
 import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -12,8 +13,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.sql.DataSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
 public abstract class AbstractTestContainers {
@@ -52,8 +51,8 @@ public abstract class AbstractTestContainers {
         );
     }
 
-    private static DataSource getDataSource(){
-        return  DataSourceBuilder.create()
+    private static DataSource getDataSource() {
+        return DataSourceBuilder.create()
                 .driverClassName(postgreSQLContainer.getDriverClassName())
                 .url(postgreSQLContainer.getJdbcUrl())
                 .username(postgreSQLContainer.getUsername())
@@ -61,7 +60,7 @@ public abstract class AbstractTestContainers {
                 .build();
     }
 
-    protected static JdbcTemplate getJdbcTemplate(){
+    protected static JdbcTemplate getJdbcTemplate() {
         return new JdbcTemplate(getDataSource());
     }
 
