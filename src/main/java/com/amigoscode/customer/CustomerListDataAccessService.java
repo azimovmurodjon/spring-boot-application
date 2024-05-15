@@ -7,14 +7,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository("list")
-public class CustomerListDataAccessService implements CustomerDAO {
+public class CustomerListDataAccessService implements CustomerDao {
 
-    private static List<Customer> customers;
+    // db
+    private static final List<Customer> customers;
 
     static {
         customers = new ArrayList<>();
-        Customer alex = new Customer(
 
+        Customer alex = new Customer(
                 1,
                 "Alex",
                 "alex@gmail.com",
@@ -23,14 +24,12 @@ public class CustomerListDataAccessService implements CustomerDAO {
         customers.add(alex);
 
         Customer jamila = new Customer(
-
                 2,
                 "Jamila",
                 "jamila@gmail.com",
                 19
         );
         customers.add(jamila);
-
     }
 
     @Override
@@ -39,9 +38,9 @@ public class CustomerListDataAccessService implements CustomerDAO {
     }
 
     @Override
-    public Optional<Customer> selectCustomerById(Integer customerId) {
-        return  customers.stream()
-                .filter(c -> c.getId().equals(customerId))
+    public Optional<Customer> selectCustomerById(Integer id) {
+        return customers.stream()
+                .filter(c -> c.getId().equals(id))
                 .findFirst();
     }
 
@@ -51,15 +50,15 @@ public class CustomerListDataAccessService implements CustomerDAO {
     }
 
     @Override
-    public boolean existsPersonWithEmail(String email) {
+    public boolean existsCustomerWithEmail(String email) {
         return customers.stream()
                 .anyMatch(c -> c.getEmail().equals(email));
     }
 
     @Override
-    public boolean existsPersonWithId(Integer Id) {
+    public boolean existsCustomerById(Integer id) {
         return customers.stream()
-                .anyMatch(c -> c.getId().equals(Id));
+                .anyMatch(c -> c.getId().equals(id));
     }
 
     @Override
@@ -67,14 +66,12 @@ public class CustomerListDataAccessService implements CustomerDAO {
         customers.stream()
                 .filter(c -> c.getId().equals(customerId))
                 .findFirst()
-                .ifPresent(customers :: remove);
-//                  or use this
-//                .ifPresent(o -> customers.remove(o));
+                .ifPresent(customers::remove);
     }
 
     @Override
-    public void updateCustomer(Customer update) {
-        customers.add(update);
+    public void updateCustomer(Customer customer) {
+        customers.add(customer);
     }
 
 }

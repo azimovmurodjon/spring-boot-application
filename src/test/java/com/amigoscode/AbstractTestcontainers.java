@@ -2,7 +2,6 @@ package com.amigoscode;
 
 import com.github.javafaker.Faker;
 import org.flywaydb.core.Flyway;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,38 +14,40 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import javax.sql.DataSource;
 
 @Testcontainers
-public abstract class AbstractTestContainers {
+public abstract class AbstractTestcontainers {
 
-    @BeforeClass
-    public static void beforeAll(){
-        Flyway flyway = Flyway.configure().dataSource(
-                postgreSQLContainer.getJdbcUrl(),
-                postgreSQLContainer.getUsername(),
-                postgreSQLContainer.getPassword()
-        ).load();
+    @BeforeAll
+    static void beforeAll() {
+        Flyway flyway = Flyway
+                .configure()
+                .dataSource(
+                        postgreSQLContainer.getJdbcUrl(),
+                        postgreSQLContainer.getUsername(),
+                        postgreSQLContainer.getPassword()
+                ).load();
         flyway.migrate();
-        System.out.println();
     }
 
     @Container
-    protected static PostgreSQLContainer<?> postgreSQLContainer =
+    protected static final PostgreSQLContainer<?> postgreSQLContainer =
             new PostgreSQLContainer<>("postgres:latest")
                     .withDatabaseName("amigoscode-dao-unit-test")
                     .withUsername("amigoscode")
                     .withPassword("password");
 
     @DynamicPropertySource
-    private static void registrationDataSourceProperties(DynamicPropertyRegistry registry){
+    private static void registerDataSourceProperties(
+            DynamicPropertyRegistry registry) {
         registry.add(
-                "spring.database.url",
+                "spring.datasource.url",
                 postgreSQLContainer::getJdbcUrl
         );
         registry.add(
-                "spring.database.username",
+                "spring.datasource.username",
                 postgreSQLContainer::getUsername
         );
         registry.add(
-                "spring.database.password",
+                "spring.datasource.password",
                 postgreSQLContainer::getPassword
         );
     }
