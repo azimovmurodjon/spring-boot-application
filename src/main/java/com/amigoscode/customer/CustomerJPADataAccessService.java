@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository("jpa")
-public class CustomerJPADataAccessService implements CustomerDAO{
+public class CustomerJPADataAccessService implements CustomerDao {
 
     private final CustomerRepository customerRepository;
 
@@ -20,8 +20,8 @@ public class CustomerJPADataAccessService implements CustomerDAO{
     }
 
     @Override
-    public Optional<Customer> selectCustomerById(Integer customerId) {
-        return customerRepository.findById(customerId);
+    public Optional<Customer> selectCustomerById(Integer id) {
+        return customerRepository.findById(id);
     }
 
     @Override
@@ -30,13 +30,13 @@ public class CustomerJPADataAccessService implements CustomerDAO{
     }
 
     @Override
-    public boolean existsPersonWithEmail(String email) {
+    public boolean existsCustomerWithEmail(String email) {
         return customerRepository.existsCustomerByEmail(email);
     }
 
     @Override
-    public boolean existsPersonWithId(Integer Id) {
-        return customerRepository.existsCustomerById(Id);
+    public boolean existsCustomerById(Integer id) {
+        return customerRepository.existsCustomerById(id);
     }
 
     @Override
