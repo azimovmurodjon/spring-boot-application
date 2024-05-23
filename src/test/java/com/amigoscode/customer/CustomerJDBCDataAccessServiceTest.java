@@ -71,14 +71,14 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
             assertThat(c.getAge()).isEqualTo(customer.getAge());
         });
     }
-    
+
     @Test
     void willReturnEmptyWhenSelectCustomerById() {
         // Given
-        int id = -1;
+        int id = 0;
 
         // When
-        Optional<Customer> actual = underTest.selectCustomerById(id);
+        var actual = underTest.selectCustomerById(id);
 
         // Then
         assertThat(actual).isEmpty();
@@ -88,8 +88,9 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
     void existsPersonWithEmail() {
         // Given
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
+        String name = FAKER.name().fullName();
         Customer customer = new Customer(
-                FAKER.name().fullName(),
+                name,
                 email,
                 20
         );
@@ -101,7 +102,6 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
 
         // Then
         assertThat(actual).isTrue();
-
     }
 
     @Test
@@ -114,7 +114,6 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
 
         // Then
         assertThat(actual).isFalse();
-
     }
 
     @Test
@@ -137,25 +136,22 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
                 .orElseThrow();
 
         // When
-        boolean actual = underTest.existsCustomerById(id);
+        var actual = underTest.existsCustomerById(id);
 
         // Then
-
         assertThat(actual).isTrue();
-
     }
 
     @Test
     void existsPersonWithIdWillReturnFalseWhenIdNotPresent() {
         // Given
-        int id = - 1;
+        int id = -1;
 
         // When
-        boolean actual = underTest.existsCustomerById(id);
+        var actual = underTest.existsCustomerById(id);
 
         // Then
         assertThat(actual).isFalse();
-
     }
 
     @Test
@@ -167,6 +163,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
                 email,
                 20
         );
+
         underTest.insertCustomer(customer);
 
         int id = underTest.selectAllCustomers()
@@ -175,13 +172,13 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
                 .map(Customer::getId)
                 .findFirst()
                 .orElseThrow();
+
         // When
         underTest.deleteCustomerById(id);
 
         // Then
         Optional<Customer> actual = underTest.selectCustomerById(id);
         assertThat(actual).isNotPresent();
-
     }
 
     @Test
@@ -203,11 +200,9 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
                 .findFirst()
                 .orElseThrow();
 
-        var newName = "UnderTest";
-
+        var newName = "foo";
 
         // When age is name
-
         Customer update = new Customer();
         update.setId(id);
         update.setName(newName);
@@ -219,11 +214,10 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
 
         assertThat(actual).isPresent().hasValueSatisfying(c -> {
             assertThat(c.getId()).isEqualTo(id);
-            assertThat(c.getName()).isEqualTo(newName);
+            assertThat(c.getName()).isEqualTo(newName); // change
             assertThat(c.getEmail()).isEqualTo(customer.getEmail());
             assertThat(c.getAge()).isEqualTo(customer.getAge());
         });
-
     }
 
     @Test
@@ -245,11 +239,9 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
                 .findFirst()
                 .orElseThrow();
 
-        var newEmail = "UnderTest@email.com";
+        var newEmail = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();;
 
-
-        // When age is name
-
+        // When email is changed
         Customer update = new Customer();
         update.setId(id);
         update.setEmail(newEmail);
@@ -261,11 +253,10 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
 
         assertThat(actual).isPresent().hasValueSatisfying(c -> {
             assertThat(c.getId()).isEqualTo(id);
+            assertThat(c.getEmail()).isEqualTo(newEmail); // change
             assertThat(c.getName()).isEqualTo(customer.getName());
-            assertThat(c.getEmail()).isEqualTo(newEmail);
             assertThat(c.getAge()).isEqualTo(customer.getAge());
         });
-
     }
 
     @Test
@@ -287,11 +278,9 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
                 .findFirst()
                 .orElseThrow();
 
-        int newAge = 22;
+        var newAge = 100;
 
-
-        // When age is name
-
+        // When age is changed
         Customer update = new Customer();
         update.setId(id);
         update.setAge(newAge);
@@ -303,11 +292,10 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
 
         assertThat(actual).isPresent().hasValueSatisfying(c -> {
             assertThat(c.getId()).isEqualTo(id);
+            assertThat(c.getAge()).isEqualTo(newAge); // change
             assertThat(c.getName()).isEqualTo(customer.getName());
             assertThat(c.getEmail()).isEqualTo(customer.getEmail());
-            assertThat(c.getAge()).isEqualTo(newAge);
         });
-
     }
 
     @Test
@@ -332,19 +320,21 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
         // When update with new name, age and email
         Customer update = new Customer();
         update.setId(id);
-        update.setName("UnderTestUpdate");
+        update.setName("foo");
         update.setEmail(UUID.randomUUID().toString());
         update.setAge(22);
 
         underTest.updateCustomer(update);
+
         // Then
         Optional<Customer> actual = underTest.selectCustomerById(id);
-        assertThat(actual).isPresent().hasValue(update);
 
+        assertThat(actual).isPresent().hasValue(update);
     }
 
     @Test
     void willNotUpdateWhenNothingToUpdate() {
+        // Given
         String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
         Customer customer = new Customer(
                 FAKER.name().fullName(),
@@ -361,18 +351,20 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainers {
                 .findFirst()
                 .orElseThrow();
 
-        // When update with new name, age and email
+        // When update without no changes
         Customer update = new Customer();
         update.setId(id);
 
         underTest.updateCustomer(update);
+
         // Then
         Optional<Customer> actual = underTest.selectCustomerById(id);
+
         assertThat(actual).isPresent().hasValueSatisfying(c -> {
             assertThat(c.getId()).isEqualTo(id);
+            assertThat(c.getAge()).isEqualTo(customer.getAge());
             assertThat(c.getName()).isEqualTo(customer.getName());
             assertThat(c.getEmail()).isEqualTo(customer.getEmail());
-            assertThat(c.getAge()).isEqualTo(customer.getAge());
         });
     }
 }
