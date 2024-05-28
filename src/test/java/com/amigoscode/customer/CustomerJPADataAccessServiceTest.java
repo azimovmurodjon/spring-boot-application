@@ -98,9 +98,7 @@ class CustomerJPADataAccessServiceTest {
 
         // Then
         verify(customerRepository).deleteById(id);
-
     }
-
     @Test
     void updateCustomer() {
         // Given
