@@ -18,6 +18,7 @@ class CustomerServiceTest {
     private CustomerService underTest;
 
     @BeforeEach
+
     void setUp() {
         AutoCloseable autoCloseable = MockitoAnnotations.openMocks(this);
         underTest = new CustomerService(customerDao);
